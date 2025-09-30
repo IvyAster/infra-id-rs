@@ -138,7 +138,7 @@ curl -v http://127.0.0.1:8080/api/id/struct/7378656748590071808
 - LOG_CONFIG__LEVEL="error|warn|info|trace" 日志等级
 - LOG_CONFIG__LOCATION="./logs" 日志位置
 - LOG_CONFIG__FILE_PREFIX="infra-id" 日志文件前缀
-- LOG_CONFIG__APPENDER="file|console" 日志输出位置
+- LOG_CONFIG__APPENDER="file|console|all" 日志输出位置
 
 ```yaml
 services:
