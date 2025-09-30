@@ -1,7 +1,10 @@
-use actix_web::{dev::{ServiceResponse}, middleware::ErrorHandlerResponse, body::BoxBody, http::{StatusCode}, ResponseError, HttpResponse};
-use actix_web::body::EitherBody;
-use thiserror::Error;
 use crate::common::common::ApiResult;
+use actix_web::body::EitherBody;
+use actix_web::{
+    HttpResponse, ResponseError, body::BoxBody, dev::ServiceResponse, http::StatusCode,
+    middleware::ErrorHandlerResponse,
+};
+use thiserror::Error;
 
 pub fn error_handlers() -> actix_web::middleware::ErrorHandlers<BoxBody> {
     actix_web::middleware::ErrorHandlers::new()
@@ -13,33 +16,24 @@ pub fn error_handlers() -> actix_web::middleware::ErrorHandlers<BoxBody> {
 }
 
 // 统一的JSON错误处理器
-fn error_handler<B>(res: ServiceResponse<B>) -> Result<ErrorHandlerResponse<BoxBody>, actix_web::Error> {
+fn error_handler<B>(
+    res: ServiceResponse<B>,
+) -> Result<ErrorHandlerResponse<BoxBody>, actix_web::Error> {
     let status = res.status();
-    let api_result = ApiResult::<()>::error(
-        status.canonical_reason().unwrap_or("Unknown error")
-    );
+    let api_result = ApiResult::<()>::error(status.canonical_reason().unwrap_or("Unknown error"));
 
     let json_response = serde_json::to_string(&api_result)
         .map_err(|e| actix_web::error::ErrorInternalServerError(e))?;
 
     Ok(ErrorHandlerResponse::Response(
-        res.map_body(|_head, _body| {
-            BoxBody::new(json_response)
-        })
-            .map_body(|_header, body|{
-                EitherBody::left(body)
-            })
+        res.map_body(|_head, _body| BoxBody::new(json_response))
+            .map_body(|_header, body| EitherBody::left(body)),
     ))
 }
-
-
-
-
 
 // 自定义应用错误枚举
 #[derive(Debug, Error)]
 pub enum AppError {
-
     // 包装 anyhow::Error 的变体
     // 使用 thiserror 的 #[from] 属性自动实现 From<anyhow::Error>
     #[error("An unexpected error occurred: {0}")]

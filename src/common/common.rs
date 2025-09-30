@@ -1,5 +1,5 @@
 use actix_web::{HttpRequest, HttpResponse, Responder};
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ApiResult<T> {
@@ -11,19 +11,25 @@ pub struct ApiResult<T> {
     pub data: Option<T>,
 }
 
-
-impl <T> ApiResult<T> {
+impl<T> ApiResult<T> {
     pub fn error(message: &str) -> ApiResult<T> {
-        ApiResult{code: "200".to_string(), message: message.to_string(), data: None}
+        ApiResult {
+            code: "200".to_string(),
+            message: message.to_string(),
+            data: None,
+        }
     }
 
-
     pub fn success(data: T) -> ApiResult<T> {
-        ApiResult{code: "200".to_string(), message: "success".to_string(), data: Some(data) }
+        ApiResult {
+            code: "200".to_string(),
+            message: "success".to_string(),
+            data: Some(data),
+        }
     }
 }
 
-impl <T: Serialize> Responder for ApiResult<T>{
+impl<T: Serialize> Responder for ApiResult<T> {
     type Body = actix_web::body::BoxBody;
 
     fn respond_to(self, _req: &HttpRequest) -> HttpResponse<Self::Body> {

@@ -1,3 +1,3 @@
 pub mod id_service;
 
-pub trait  IService{}
+pub trait IService {}

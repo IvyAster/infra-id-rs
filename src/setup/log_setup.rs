@@ -1,11 +1,11 @@
-use tracing_subscriber::{fmt, EnvFilter};
-use tracing_appender::rolling::{RollingFileAppender, Rotation};
-use std::io;
+use crate::AppResult;
 use serde::Deserialize;
+use std::io;
 use tracing::Level;
+use tracing_appender::rolling::{RollingFileAppender, Rotation};
 use tracing_subscriber::layer::SubscriberExt;
 use tracing_subscriber::util::SubscriberInitExt;
-use crate::AppResult;
+use tracing_subscriber::{EnvFilter, fmt};
 
 #[derive(Debug, Deserialize, Clone)]
 pub struct LogConfig {
@@ -22,15 +22,13 @@ impl LogConfig {
     }
     fn get_rotation(&self) -> Rotation {
         match &self.rotation {
-            Some(ro) => {
-                match ro.as_str() {
-                    "daily" => Rotation::DAILY,
-                    "never" => Rotation::NEVER,
-                    "minute" => Rotation::MINUTELY,
-                    "hour" => Rotation::HOURLY,
-                    _ =>  Rotation::NEVER,
-                }
-            }
+            Some(ro) => match ro.as_str() {
+                "daily" => Rotation::DAILY,
+                "never" => Rotation::NEVER,
+                "minute" => Rotation::MINUTELY,
+                "hour" => Rotation::HOURLY,
+                _ => Rotation::NEVER,
+            },
             _ => Rotation::NEVER,
         }
     }

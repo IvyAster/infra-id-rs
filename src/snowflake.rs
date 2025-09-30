@@ -1,7 +1,7 @@
 use std::sync::atomic::{AtomicU64, Ordering};
-use std::time::{SystemTime, UNIX_EPOCH};
 use std::thread;
 use std::time::Duration;
+use std::time::{SystemTime, UNIX_EPOCH};
 
 /// Snowflake ID 生成器
 /// 结构：1位符号位 + 41位时间戳 + 10位机器ID + 12位序列号
@@ -68,12 +68,13 @@ impl Snowflake {
             }
 
             // 尝试更新时间戳和序列号
-            if self.last_timestamp
+            if self
+                .last_timestamp
                 .compare_exchange(
                     last_timestamp,
                     timestamp,
                     Ordering::AcqRel,
-                    Ordering::Relaxed
+                    Ordering::Relaxed,
                 )
                 .is_ok()
             {
@@ -143,7 +144,7 @@ mod tests {
 
         assert!(id1 < id2, "ID 应该单调递增");
 
-        let (timestamp, machine_id, sequence) = snowflake.parse_id(id1);
+        let (timestamp, machine_id, _sequence) = snowflake.parse_id(id1);
         assert_eq!(machine_id, 1);
         assert!(timestamp > 0);
     }

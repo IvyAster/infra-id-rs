@@ -1,2 +1,2 @@
-pub mod log_setup;
 pub mod component_setup;
+pub mod log_setup;
