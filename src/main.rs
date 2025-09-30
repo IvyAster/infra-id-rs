@@ -17,7 +17,7 @@ pub use common::AppResult;
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     let app_config = AppConfig::load_config().expect("Failed to load config");
-    setup::log_setup::setup(&app_config.log_config).expect("Failed to setup logging");
+    setup::log_setup::setup(&app_config.log_config).expect("Failed to set up logging");
     let components = setup::component_setup::setup(
         match app_config.id_config.worker_id {
             Some(work_id) => work_id,
