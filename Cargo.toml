@@ -1,0 +1,19 @@
+[package]
+name = "infra-id-rs"
+version = "1.0.0"
+edition = "2024"
+
+#[[bin]]
+#name = "infra-id"
+#path = "src/main.rs"
+
+[dependencies]
+actix-web = "4"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+anyhow = "1"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "json", "serde_json"] }
+tracing-appender = "0.2"
+config = { version = "0.15.7", features = ["toml"] }
+thiserror = "2.0.17"

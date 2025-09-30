@@ -1,0 +1,10 @@
+services:
+  id:
+    image: IvyAster/infra-id-rs:alpine-1.0
+    container_name: id
+    ports:
+      - "8000:8080"
+    restart: always
+    environment:
+      - ID_CONFIG__WORKER_ID=0
+      - SERVER_CONFIG__PORT=8080

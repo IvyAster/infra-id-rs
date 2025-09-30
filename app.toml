@@ -1,0 +1,15 @@
+[server_config]
+host="0.0.0.0"
+port=8080
+
+[log_config]
+level = "info"
+location = "logs"
+file_prefix = "infra-id"
+appender="console" #console file all
+
+[id_config]
+worker_id=0
+
+
+

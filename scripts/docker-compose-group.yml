@@ -1,0 +1,75 @@
+services:
+  id-0:
+    image: IvyAster/infra-id-rs:alpine-1.0
+    container_name: id-0
+    ports:
+      - "8000:8080"
+    networks:
+      id-group:
+        ipv4_address: 172.28.0.100
+    restart: always
+    environment:
+      - ID_CONFIG__WORKER_ID=0
+      - SERVER_CONFIG__PORT=8080
+  id-1:
+    image: IvyAster/infra-id-rs:alpine-1.0
+    container_name: id-1
+    ports:
+      - "8001:8080"
+    networks:
+      id-group:
+        ipv4_address: 172.28.0.101
+    restart: always
+    environment:
+      - ID_CONFIG__WORKER_ID=1
+      - SERVER_CONFIG__PORT=8080
+  id-2:
+    image: IvyAster/infra-id-rs:alpine-1.0
+    container_name: id-2
+    ports:
+      - "8002:8080"
+    networks:
+      id-group:
+        ipv4_address: 172.28.0.102
+    restart: always
+    environment:
+      - ID_CONFIG__WORKER_ID=2
+      - SERVER_CONFIG__PORT=8080
+  id-3:
+    image: IvyAster/infra-id-rs:alpine-1.0
+    container_name: id-3
+    ports:
+      - "8003:8080"
+    networks:
+      id-group:
+        ipv4_address: 172.28.0.103
+    restart: always
+    environment:
+      - ID_CONFIG__WORKER_ID=3
+      - SERVER_CONFIG__PORT=8080
+  proxy:
+    image: nginx:alpine
+    restart: always
+    container_name: proxy
+    depends_on:
+      - id-0
+      - id-1
+      - id-2
+      - id-3
+    networks:
+      id-group:
+        ipv4_address: 172.28.0.200
+    ports:
+      - "8100:8100"
+    volumes:
+      - ./id.conf:/etc/nginx/conf.d/id.conf
+
+# 定义自定义网络
+networks:
+  id-group:
+    driver: bridge
+    name: id-group
+    ipam:
+      config:
+        - subnet: 172.28.0.0/16
+          gateway: 172.28.0.1
